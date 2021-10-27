@@ -43,8 +43,17 @@ Resources:
           Fn::Base64: |
             #! /bin/bash
             yum update -y
+            amazon-linux-extras install docker -y
+            systemctl start docker
+            systemctl enable docker
+            usermod -a -G docker ec2-user
+            wget "https://raw.githubusercontent.com/Ummuhan-web/quest/master/src/000.js"
+            wget "https://raw.githubusercontent.com/rearc/quest/master/package.json"
+            cd /home/ec2-user
             npm install && npm start
-            wget "https://github.com/rearc/quest"
+            docker build -t ummuhany/quest 
+            docker run -dp 80:3000  quest
+
   WebServersTG:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
     Properties:
